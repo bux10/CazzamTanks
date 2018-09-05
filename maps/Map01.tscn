@@ -330,7 +330,7 @@ position = Vector2( 2537.49, 1858.24 )
 [node name="Player" parent="." index="8" instance=ExtResource( 9 )]
 
 position = Vector2( 1812.68, 428.499 )
-_oh_cooldown = 3.0
+_overheat = 2.0
 
 [connection signal="shoot" from="Paths/Path2D/PathFollow2D/EnemyTank" to="." method="_on_Tank_shoot"]
 
