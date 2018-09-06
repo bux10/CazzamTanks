@@ -34,6 +34,9 @@ func control(delta):
 		velocity += Vector2(-max_speed, 0).rotated(rotation)
 		velocity /= 2.0
 	if Input.is_action_just_pressed('click'):
+		if !$OH_Cooldown.is_stopped():
+			$OH_Cooldown.stop()
+			$OH_Cooldown.wait_time = _oh_cooldown
 		if !$Overheat.paused:
 			$Overheat.start()
 		else:
@@ -46,12 +49,12 @@ func control(delta):
 	if Input.is_action_just_released('click'):
 		$Turret.play('idle')
 		$Overheat.paused = true
+		$OH_Cooldown.wait_time = _oh_cooldown
 		$OH_Cooldown.start()
 
 func _process(delta):
 	if !$OH_Cooldown.is_stopped():
 		emit_signal('cooling', $OH_Cooldown.time_left)
-		#_on_Player_cooling($OH_Cooldown.time_left)
 
 func shoot(num, spread, target=null):
 	if can_shoot:
@@ -76,15 +79,19 @@ func _on_OH_Cooldown_timeout():
 	$OH_Cooldown.stop()
 	overheated = false
 	can_shoot = true
-	#$Overheat.paused = false
+	$Overheat.stop()
+	$Overheat.paused = false
 	$Overheat.wait_time = _overheat
 	$OH_Cooldown.wait_time = _oh_cooldown
+	
 
 func _on_Player_overheating(value):
 	$OverHeatDisplay/HealthBar.texture_progress = bar_green
 	value = value/$OverHeatDisplay/HealthBar.max_value
 	$OverHeatDisplay/HealthBar.value = value*$OverHeatDisplay/HealthBar.max_value
-	print(value)
+		
+	$CanvasLayer/Control/Container/overheating.text = str(value)
+	#print(value)
 	if value < 0.6:
 		$OverHeatDisplay/HealthBar.texture_progress = bar_yellow
 	if value < 0.25:
@@ -92,6 +99,46 @@ func _on_Player_overheating(value):
 	if value < 1:
 		$OverHeatDisplay/HealthBar.show()
 
+var value2 = 0
+
 func _on_Player_cooling(value):
-	value = value/$OverHeatDisplay/HealthBar.max_value
-	print(value)
+	var value1 = value/$OverHeatDisplay/HealthBar.max_value
+	var value2 = 1 - ($Overheat.time_left/$OverHeatDisplay/HealthBar.max_value)
+	
+	#$OverHeatDisplay/HealthBar.value = 1 - ($Overheat.time_left/$OverHeatDisplay/HealthBar.max_value)
+	
+	$CanvasLayer/Control/Container/cooldown.text = str(value1)
+	$CanvasLayer/Control/Container/cooldown2.text = str(value2)
+	#print(value)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
